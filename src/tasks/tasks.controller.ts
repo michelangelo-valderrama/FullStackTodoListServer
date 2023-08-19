@@ -28,7 +28,7 @@ export class TasksController {
   async getById(@Param('id') id: Id) {
     const task = await this.tasksService.getById(id);
     if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
+      throw new NotFoundException(`Task ${id} not found`);
     }
     return task;
   }
@@ -42,11 +42,11 @@ export class TasksController {
 
   @Delete(':id')
   async delete(@Param('id') id: Id) {
-    const tasks = await this.tasksService.delete(id);
-    if (!tasks) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
+    const result = await this.tasksService.delete(id);
+    if (!result) {
+      throw new NotFoundException(`Task ${id} not found`);
     }
-    return tasks;
+    return { message: `Task ${id} deleted` };
   }
 
   @Patch(':id')
@@ -54,7 +54,7 @@ export class TasksController {
   async update(@Param('id') id: Id, @Body() updateTaskDto: UpdateTaskDto) {
     const tasks = await this.tasksService.update(id, updateTaskDto);
     if (!tasks) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
+      throw new NotFoundException(`Task ${id} not found`);
     }
     return tasks;
   }

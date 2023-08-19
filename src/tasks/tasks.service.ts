@@ -21,14 +21,14 @@ export class TasksService {
     const task = new Task();
     task.content = createTaskDto.content;
     this.tasks.push(task);
-    return this.getAll();
+    return task;
   }
 
   async delete(id: Id) {
     const taskIndex = this.getIndex(id);
     if (taskIndex === -1) return false;
     this.tasks.splice(taskIndex, 1);
-    return this.getAll();
+    return true;
   }
 
   async update(id: Id, updateTaskDto: UpdateTaskDto) {
@@ -36,7 +36,7 @@ export class TasksService {
     if (taskIndex === -1) return false;
     const newTask = Object.assign(this.tasks[taskIndex], updateTaskDto);
     this.tasks[taskIndex] = newTask;
-    return this.getAll();
+    return newTask;
   }
 
   private getIndex(id: Id) {
