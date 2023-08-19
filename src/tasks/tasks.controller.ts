@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { Id } from './entity/task.entity';
+import { Types } from 'mongoose';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Controller('tasks')
@@ -25,7 +25,7 @@ export class TasksController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: Id) {
+  async getById(@Param('id') id: Types.ObjectId) {
     const task = await this.tasksService.getById(id);
     if (!task) {
       throw new NotFoundException(`Task ${id} not found`);
@@ -41,9 +41,9 @@ export class TasksController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: Id) {
-    const result = await this.tasksService.delete(id);
-    if (!result) {
+  async delete(@Param('id') id: Types.ObjectId) {
+    const deletedTask = await this.tasksService.delete(id);
+    if (!deletedTask) {
       throw new NotFoundException(`Task ${id} not found`);
     }
     return { message: `Task ${id} deleted` };
@@ -51,11 +51,14 @@ export class TasksController {
 
   @Patch(':id')
   @UsePipes(new ValidationPipe())
-  async update(@Param('id') id: Id, @Body() updateTaskDto: UpdateTaskDto) {
-    const tasks = await this.tasksService.update(id, updateTaskDto);
-    if (!tasks) {
+  async update(
+    @Param('id') id: Types.ObjectId,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ) {
+    const updatedTask = await this.tasksService.update(id, updateTaskDto);
+    if (!updatedTask) {
       throw new NotFoundException(`Task ${id} not found`);
     }
-    return tasks;
+    return updatedTask;
   }
 }
